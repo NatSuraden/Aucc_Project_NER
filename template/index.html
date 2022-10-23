@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>Aucc Project</h1>
+
+<form action="/ner_spacy" method = "POST" >
+  <p><label for="Aucc Project">W3Schools help me alots :D</label></p>
+  <textarea id="article" name="article" rows="4" cols="50"></textarea>
+  <br>
+  <label for="Choose">Choose display option:</label>
+  <select name="display" id="display" onchange="showDiv('option_check1', this)">
+    <option class="blank" value="0">Please select</option>
+    <option value="default">default</option>
+    <option value="table">table display</option>
+  </select>
+  <div id = "option_check1" style="display: none">
+  <p ><input type="checkbox" id="option_check" name="spacy_option" value="DATE">
+    <label for="option1">DATE</label><br>
+    <input type="checkbox" id="option_check" name="spacy_option" value="PERSON">
+    <label for="option2">PERSON</label><br>
+    <input type="checkbox" id="option_check" name="spacy_option" value="ORG">
+    <label for="option3">ORG</label><br>
+ </p></div>
+  <button type="reset" class="btn btn-primary"><i class="fa fa-eraser"></i> Clear</button>
+  <input type="submit" value="Submit">
+</form>
+
+<p>This is the past of NPL learning.</p>
+
+<p>{{ go_article|markdown }}</p>
+
+<script>
+    function showDiv(divId, element)
+{
+    document.getElementById(divId).style.display = element.value == "default" ? 'block' : 'none';
+}
+    </script>
+
+
+</body>
+</html>
