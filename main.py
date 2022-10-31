@@ -4,10 +4,10 @@ from nltk.tokenize import word_tokenize
 from collections import Counter
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
-from sqlalchemy import null
+#from sqlalchemy import null
 from flaskext.markdown import Markdown
 from spacy import displacy
-
+import translators as ts
 
 
 
@@ -16,7 +16,7 @@ Markdown(app)
 HTML_WRAPPER = """<div style="overflow-x: auto; border: 1px solid #e6e9ef; border-radius: 0.25rem; padding: 1rem">{}</div>"""
 @app.route('/')
 def Home():
-    return render_template('index.html' ,go_article ="")
+    return render_template('index.html' ,go_article ="",rgo = 0,value = [])
 
 @app.route('/ner_spacy', methods = ['GET', 'POST'])
 def ner_spacy():
@@ -28,6 +28,18 @@ def ner_spacy():
         if str(display) == "table" and article != "":
             totallists = spacy_that_article(article)
             return render_template('table_display.html', value = totallists , rgo = len(max(totallists)))
+        elif str(display) == "terminology" and article != "":
+            article = request.form["article"]
+            test_list = list_word(article)
+            test_list_ts = []
+            for i in test_list:
+                x = ts_to_thai(i)
+                test_list_ts.append(x)
+            total_list = []
+            total_list.append(test_list)
+            total_list.append(test_list_ts)
+            return render_template('index.html',go_article = "",value = total_list , rgo = len(max(total_list)))
+            #print(test_list_ts)
         else:
             nlp = spacy.load('en_core_web_sm')
             docx = nlp(article)
@@ -35,8 +47,26 @@ def ner_spacy():
             html = displacy.render(docx,style="ent",options=options)
             html = html.replace("\n\n","\n")
             result = HTML_WRAPPER.format(html)
-            return render_template('index.html',go_article = result)
-
+            return render_template('index.html',go_article = result,rgo = 0,value = [])
+def ts_to_thai(word):
+  word_ts = ts.google(word, from_language='en', to_language='th')
+  return word_ts
+def list_word(text):
+    article = text
+    tokens = word_tokenize(article)
+    lower_tokens = [t.lower() for t in tokens]
+    alpha_only = [t for t in lower_tokens if t.isalpha()]
+    no_stops = [t for t in alpha_only if t not in stopwords.words('english')]
+    wordnet_lemmatizer = WordNetLemmatizer()
+    lemmatized = [wordnet_lemmatizer.lemmatize(t) for t in no_stops]
+    lemmatized_1 = []
+    for i in lemmatized:
+      if i not in lemmatized_1:
+        lemmatized_1.append(i)
+      else:
+        pass
+    lemmatized_1.sort()
+    return lemmatized_1
 def spacy_that_article(us_word):
     totallist = []
     person = []
