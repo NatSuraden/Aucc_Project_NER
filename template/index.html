@@ -1,5 +1,10 @@
 <!DOCTYPE html>
 <html>
+  <style>
+    table, th, td {
+      border:1px solid black;
+    }
+    </style>
 <body>
 
 <h1>Aucc Project</h1>
@@ -13,6 +18,7 @@
     <option class="blank" value="0">Please select</option>
     <option value="default">default</option>
     <option value="table">table display</option>
+    <option value="terminology">terminology</option>
   </select>
   <div id = "option_check1" style="display: none">
   <p ><input type="checkbox" id="option_check" name="spacy_option" value="DATE">
@@ -29,6 +35,19 @@
 <p>This is the past of NPL learning.</p>
 
 <p>{{ go_article|markdown }}</p>
+
+  <table style="width:100%">
+    <tr>
+      <th>terminology</th>
+      <th>คำแปล</th>
+    </tr>
+    {% for row in range(rgo) %}
+      <tr> 
+        <td>{{value[0][row]}}</td>
+        <td>{{value[1][row]}}</td>
+    </tr>
+    {% endfor %}
+
 
 <script>
     function showDiv(divId, element)
